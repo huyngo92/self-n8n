@@ -16,7 +16,7 @@ echo "--------- 🔴 Finish creating folder -----------"
 echo "--------- 🟢 Start docker compose up  -----------"
 wget https://raw.githubusercontent.com/huyngo92/self-n8n/refs/heads/main/compose_noai.yaml -O compose.yaml
 # export EXTERNAL_IP=http://"$(hostname -I | cut -f1 -d' ')"
-export EXTERNAL_IP=http://ec2-13-236-178-123.ap-southeast-2.compute.amazonaws.com
+export EXTERNAL_IP=http://selfmysszalo.duckdns.org
 export CURR_DIR=$(pwd)
 sudo -E docker compose up -d
 echo "--------- 🔴 Finish! Wait a few minutes and test in browser at url $EXTERNAL_IP for n8n UI -----------"

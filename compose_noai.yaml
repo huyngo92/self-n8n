@@ -5,13 +5,13 @@ services:
     environment:
       - N8N_SECURE_COOKIE=false
       - GENERIC_TIMEZONE=Asia/Ho_Chi_Minh
-      - N8N_EDITOR_BASE_URL=ec2-13-236-178-123.ap-southeast-2.compute.amazonaws.com
-      - WEBHOOK_URL=ec2-13-236-178-123.ap-southeast-2.compute.amazonaws.com
+      - N8N_EDITOR_BASE_URL=http://ec2-13-236-178-123.ap-southeast-2.compute.amazonaws.com
+      - WEBHOOK_URL=http://ec2-13-236-178-123.ap-southeast-2.compute.amazonaws.com
       - N8N_DEFAULT_BINARY_DATA_MODE=filesystem
       - N8N_MCP_ENABLED=true
       - N8N_MCP_MODE=server
       - N8N_HOST=${EXTERNAL_IP}
-      - WEBHOOK_URL=ec2-13-236-178-123.ap-southeast-2.compute.amazonaws.com
+      - WEBHOOK_URL=http://ec2-13-236-178-123.ap-southeast-2.compute.amazonaws.com
     ports:
       - "80:5678"
     volumes:

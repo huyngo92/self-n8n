@@ -2,10 +2,13 @@ version: "3.8"
 services:
   dashy:
     image: lissy93/dashy:latest
+    container_name: dashy
     ports:
       - 8080:80
     restart: always
     deploy:
       resources:
         limits:
-          memory: 256M # Giới hạn chỉ cho dùng tối đa 256MB RAM
+          memory: 1G # Tăng lên 1GB để build không bị kill
+        reservations:
+          memory: 256M # Đảm bảo tối thiểu 256MB

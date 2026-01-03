@@ -64,6 +64,15 @@ fi
 if [ $? -eq 0 ]; then
     echo "--------- 🔴 Finish! Wait a few seconds and test in browser at url http://localhost:8080 for Dashy UI -----------"
     echo ""
+    printf "${YELLOW}⏳ Kiểm tra container...${NC}\n"
+    sleep 3
+    if docker ps | grep -q dashy; then
+        printf "${GREEN}✓ Container dashy đang chạy${NC}\n"
+    else
+        printf "${RED}⚠ Container dashy không chạy, xem logs:${NC}\n"
+        docker logs dashy
+    fi
+    echo ""
     printf "${GREEN}==========================================\n"
     echo "   ✓ CÀI ĐẶT THÀNH CÔNG!"
     printf "==========================================${NC}\n"

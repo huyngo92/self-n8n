@@ -15,28 +15,6 @@ RED='\033[0;31m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# Hỏi có muốn gỡ Dashy không
-printf "%s" "${YELLOW}Ban co muon go bo Dashy khong? (y/n):${NC} "
-read -r REMOVE_DASHY
-
-if [ "$REMOVE_DASHY" = "y" ] || [ "$REMOVE_DASHY" = "Y" ]; then
-    echo ""
-    printf "${BLUE}[*] Dang go bo Dashy...${NC}\n"
-    
-    # Dừng và xóa container
-    docker stop dashy > /dev/null 2>&1
-    docker rm dashy > /dev/null 2>&1
-    
-    # Xóa thư mục dashy
-    if [ -d "$HOME/dashy" ]; then
-        rm -rf "$HOME/dashy"
-        printf "${GREEN}Da xoa thu muc ~/dashy${NC}\n"
-    fi
-    
-    printf "${GREEN}Da go bo Dashy hoan toan${NC}\n"
-    echo ""
-fi
-
 # Kiểm tra Docker
 printf "${YELLOW}[1/4]${NC} Kiem tra Docker...\n"
 if ! which docker > /dev/null 2>&1 && ! [ -x /usr/bin/docker ]; then

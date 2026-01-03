@@ -2,7 +2,7 @@
 # Homepage configuration
 # See https://fontawesome.com/v5/search for icons options
 
-title: "Tiny huyngo92 Docker Dashboard"
+title: "huyngo92 Tiny  Dashboard"
 subtitle: "Quản lý ứng dụng Docker"
 logo: "logo.png"
 # icon: "fas fa-skull-crossbones" # Optional icon
@@ -81,14 +81,6 @@ services:
         url: "http://192.168.1.92:80"
         target: "_blank"
 
-      - name: "Dashy"
-        logo: "https://dashy.to/img/dashy.png"
-        subtitle: "Alternative Dashboard"
-        tag: "dashboard"
-        keywords: "dashy dashboard"
-        url: "http://192.168.1.92:8080"
-        target: "_blank"
-
   - name: "System Monitoring"
     icon: "fas fa-server"
     items:
@@ -100,38 +92,6 @@ services:
         url: "http://192.168.1.92:61208"
         target: "_blank"
         
-      - name: "CPU Usage"
-        icon: "fas fa-microchip"
-        subtitle: "Processor Performance"
-        tag: "system"
-        keywords: "cpu processor"
-        url: "http://192.168.1.92:61208"
-        target: "_blank"
-        
-      - name: "RAM Memory"
-        icon: "fas fa-memory"
-        subtitle: "Memory Usage"
-        tag: "system"
-        keywords: "ram memory"
-        url: "http://192.168.1.92:61208"
-        target: "_blank"
-        
-      - name: "Disk Storage"
-        icon: "fas fa-hdd"
-        subtitle: "SATA/SSD Storage"
-        tag: "system"
-        keywords: "disk sata ssd storage"
-        url: "http://192.168.1.92:61208"
-        target: "_blank"
-        
-      - name: "GPU Status"
-        icon: "fas fa-desktop"
-        subtitle: "Graphics Card"
-        tag: "system"
-        keywords: "gpu graphics"
-        url: "http://localhost:61208"
-        target: "_blank"
-
   - name: "Monitoring & Tools"
     icon: "fas fa-chart-line"
     items:

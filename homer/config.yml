@@ -2,7 +2,7 @@
 # Homepage configuration
 # See https://fontawesome.com/v5/search for icons options
 
-title: "Docker Dashboard"
+title: "Tiny huyngo92 Docker Dashboard"
 subtitle: "Quản lý ứng dụng Docker"
 logo: "logo.png"
 # icon: "fas fa-skull-crossbones" # Optional icon
@@ -55,7 +55,7 @@ links:
     target: "_blank" # optional html a tag target attribute
   - name: "Portainer"
     icon: "fas fa-server"
-    url: "http://localhost:9000"
+    url: "http://192.168.1.92:9000"
     target: "_blank"
 
 # Services
@@ -66,11 +66,11 @@ services:
     icon: "fas fa-cloud"
     items:
       - name: "Portainer"
-        logo: "https://www.portainer.io/hubfs/portainer-logo-black.svg"
+        icon: "fas fa-docker"
         subtitle: "Docker Container Management"
         tag: "management"
         keywords: "docker portainer container"
-        url: "http://localhost:9000"
+        url: "http://192.168.1.92:9000"
         target: "_blank"
       
       - name: "n8n"
@@ -78,7 +78,7 @@ services:
         subtitle: "Workflow Automation"
         tag: "automation"
         keywords: "n8n workflow automation"
-        url: "http://localhost:80"
+        url: "http://192.168.1.92:80"
         target: "_blank"
 
       - name: "Dashy"
@@ -86,18 +86,61 @@ services:
         subtitle: "Alternative Dashboard"
         tag: "dashboard"
         keywords: "dashy dashboard"
-        url: "http://localhost:8080"
+        url: "http://192.168.1.92:8080"
+        target: "_blank"
+
+  - name: "System Monitoring"
+    icon: "fas fa-server"
+    items:
+      - name: "Glances (Real-time Monitor)"
+        icon: "fas fa-tachometer-alt"
+        subtitle: "CPU, RAM, GPU, Disk Monitor"
+        tag: "monitor"
+        keywords: "glances monitoring cpu ram gpu disk"
+        url: "http://192.168.1.92:61208"
+        target: "_blank"
+        
+      - name: "CPU Usage"
+        icon: "fas fa-microchip"
+        subtitle: "Processor Performance"
+        tag: "system"
+        keywords: "cpu processor"
+        url: "http://192.168.1.92:61208"
+        target: "_blank"
+        
+      - name: "RAM Memory"
+        icon: "fas fa-memory"
+        subtitle: "Memory Usage"
+        tag: "system"
+        keywords: "ram memory"
+        url: "http://192.168.1.92:61208"
+        target: "_blank"
+        
+      - name: "Disk Storage"
+        icon: "fas fa-hdd"
+        subtitle: "SATA/SSD Storage"
+        tag: "system"
+        keywords: "disk sata ssd storage"
+        url: "http://192.168.1.92:61208"
+        target: "_blank"
+        
+      - name: "GPU Status"
+        icon: "fas fa-desktop"
+        subtitle: "Graphics Card"
+        tag: "system"
+        keywords: "gpu graphics"
+        url: "http://localhost:61208"
         target: "_blank"
 
   - name: "Monitoring & Tools"
     icon: "fas fa-chart-line"
     items:
       - name: "Docker Stats"
-        logo: "https://www.docker.com/wp-content/uploads/2022/03/Moby-logo.png"
+        icon: "fab fa-docker"
         subtitle: "Container Resource Usage"
         tag: "monitoring"
-        url: "#"
-        type: "Ping"
+        keywords: "docker stats containers"
+        url: "#docker-stats"
 
   - name: "External Services"
     icon: "fas fa-globe"

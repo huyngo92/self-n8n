@@ -16,12 +16,12 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Hỏi có muốn gỡ Dashy không
-printf "${YELLOW}Bạn có muốn gỡ bỏ Dashy không? (y/n):${NC} "
+printf "%s" "${YELLOW}Ban co muon go bo Dashy khong? (y/n):${NC} "
 read -r REMOVE_DASHY
 
 if [ "$REMOVE_DASHY" = "y" ] || [ "$REMOVE_DASHY" = "Y" ]; then
     echo ""
-    printf "${BLUE}[*] Đang gỡ bỏ Dashy...${NC}\n"
+    printf "${BLUE}[*] Dang go bo Dashy...${NC}\n"
     
     # Dừng và xóa container
     docker stop dashy > /dev/null 2>&1
@@ -30,45 +30,45 @@ if [ "$REMOVE_DASHY" = "y" ] || [ "$REMOVE_DASHY" = "Y" ]; then
     # Xóa thư mục dashy
     if [ -d "$HOME/dashy" ]; then
         rm -rf "$HOME/dashy"
-        printf "${GREEN}✓ Đã xóa thư mục ~/dashy${NC}\n"
+        printf "${GREEN}Da xoa thu muc ~/dashy${NC}\n"
     fi
     
-    printf "${GREEN}✓ Đã gỡ bỏ Dashy hoàn toàn${NC}\n"
+    printf "${GREEN}Da go bo Dashy hoan toan${NC}\n"
     echo ""
 fi
 
 # Kiểm tra Docker
-printf "${YELLOW}[1/4]${NC} Kiểm tra Docker...\n"
+printf "${YELLOW}[1/4]${NC} Kiem tra Docker...\n"
 if ! which docker > /dev/null 2>&1 && ! [ -x /usr/bin/docker ]; then
-    printf "${RED}❌ Docker chưa được cài đặt. Vui lòng cài Docker trước.${NC}\n"
+    printf "${RED}Docker chua duoc cai dat. Vui long cai Docker truoc.${NC}\n"
     exit 1
 fi
-printf "${GREEN}✓ Docker đã được cài đặt${NC}\n"
+printf "${GREEN}Docker da duoc cai dat${NC}\n"
 
 # Kiểm tra Docker Compose
-printf "${YELLOW}[2/4]${NC} Kiểm tra Docker Compose...\n"
+printf "${YELLOW}[2/4]${NC} Kiem tra Docker Compose...\n"
 if ! docker compose version > /dev/null 2>&1 && ! which docker-compose > /dev/null 2>&1; then
-    printf "${RED}❌ Docker Compose chưa được cài đặt.${NC}\n"
+    printf "${RED}Docker Compose chua duoc cai dat.${NC}\n"
     exit 1
 fi
-printf "${GREEN}✓ Docker Compose đã được cài đặt${NC}\n"
+printf "${GREEN}Docker Compose da duoc cai dat${NC}\n"
 
 # Tạo thư mục homer
-printf "${YELLOW}[3/4]${NC} Tạo thư mục Homer...\n"
+printf "${YELLOW}[3/5]${NC} Tao thu muc Homer...\n"
 HOMER_DIR="$HOME/homer"
 mkdir -p "$HOMER_DIR"
 mkdir -p "$HOMER_DIR/homer-config"
 cd "$HOMER_DIR" || exit 1
-printf "${GREEN}✓ Thư mục đã sẵn sàng: $HOMER_DIR${NC}\n"
+printf "${GREEN}Thu muc da san sang: $HOMER_DIR${NC}\n"
 
 # Tải file cấu hình từ GitHub
-printf "${YELLOW}[4/4]${NC} Tải file cấu hình từ GitHub...\n"
+printf "${YELLOW}[4/5]${NC} Tai file cau hinh tu GitHub...\n"
 
 # Tải docker-compose.yml
 wget https://raw.githubusercontent.com/huyngo92/self-n8n/refs/heads/main/homer/compose-docker_homer.yml -O docker-compose.yml > /dev/null 2>&1
 
 if [ $? -ne 0 ]; then
-    printf "${RED}❌ Không thể tải file docker-compose.yml${NC}\n"
+    printf "${RED}Khong the tai file docker-compose.yml${NC}\n"
     exit 1
 fi
 
@@ -76,53 +76,78 @@ fi
 wget https://raw.githubusercontent.com/huyngo92/self-n8n/refs/heads/main/homer/config.yml -O homer-config/config.yml > /dev/null 2>&1
 
 if [ $? -ne 0 ]; then
-    printf "${RED}❌ Không thể tải file config.yml${NC}\n"
+    printf "${RED}Khong the tai file config.yml${NC}\n"
     exit 1
 fi
 
-printf "${GREEN}✓ Đã tải file cấu hình${NC}\n"
+# Tải compose-glances.yml
+wget https://raw.githubusercontent.com/huyngo92/self-n8n/refs/heads/main/homer/compose-glances.yml -O compose-glances.yml > /dev/null 2>&1
+
+if [ $? -ne 0 ]; then
+    printf "${YELLOW}! Khong the tai file Glances, se bo qua${NC}\n"
+fi
+
+printf "${GREEN}Da tai file cau hinh${NC}\n"
 
 # Khởi chạy Homer
 echo ""
-echo "--------- 🟢 Start docker compose up -----------"
+printf "${YELLOW}[5/5]${NC} Khoi chay Homer va Glances...\n"
+echo "--------- Start docker compose up -----------"
 
-# Chạy docker compose
+# Chạy docker compose Homer
 if docker compose version > /dev/null 2>&1; then
     docker compose up -d
+    # Chạy Glances nếu file tồn tại
+    if [ -f compose-glances.yml ]; then
+        docker compose -f compose-glances.yml up -d
+    fi
 else
     docker-compose up -d
+    if [ -f compose-glances.yml ]; then
+        docker-compose -f compose-glances.yml up -d
+    fi
 fi
 
 if [ $? -eq 0 ]; then
-    echo "--------- 🔴 Finish! -----------"
+    echo "--------- Finish! -----------"
     echo ""
     printf "${GREEN}==========================================\n"
-    echo "   ✓ CÀI ĐẶT HOMER THÀNH CÔNG!"
+    echo "   CAI DAT HOMER THANH CONG!"
     printf "==========================================${NC}\n"
     echo ""
-    printf "${GREEN}📍 Homer đang chạy tại:${NC} http://localhost:8081\n"
-    printf "${GREEN}📁 Thư mục cài đặt:${NC} $HOMER_DIR\n"
-    printf "${GREEN}⚙️  File cấu hình:${NC} $HOMER_DIR/homer-config/config.yml\n"
+    printf "${GREEN}Homer dang chay tai:${NC} http://localhost:8081\n"
+    printf "${GREEN}Glances Monitor:${NC} http://localhost:61208\n"
+    printf "${GREEN}Thu muc cai dat:${NC} $HOMER_DIR\n"
+    printf "${GREEN}File cau hinh:${NC} $HOMER_DIR/homer-config/config.yml\n"
     echo ""
-    printf "${YELLOW}⚙️  Cấu hình tài nguyên:${NC}\n"
-    echo "  • RAM tối đa: 128MB (Siêu nhẹ!)"
-    echo "  • RAM tối thiểu: 32MB"
+    printf "${YELLOW}Cau hinh tai nguyen:${NC}\n"
+    echo "  - Homer RAM: 128MB (Sieu nhe!)"
+    echo "  - Glances RAM: 128MB"
+    echo "  - Tong RAM: ~256MB"
     echo ""
-    printf "${YELLOW}🔧 Các lệnh hữu ích:${NC}\n"
-    echo "  • Xem logs:          docker logs -f homer"
-    echo "  • Dừng Homer:        docker stop homer"
-    echo "  • Khởi động lại:     docker restart homer"
-    echo "  • Xóa container:     docker rm -f homer"
-    echo "  • Chỉnh sửa config:  nano ~/homer/homer-config/config.yml"
+    printf "${YELLOW}Cac lenh huu ich:${NC}\n"
+    echo "  Homer:"
+    echo "    - Xem logs:        docker logs -f homer"
+    echo "    - Dung Homer:      docker stop homer"
+    echo "    - Khoi dong lai:   docker restart homer"
     echo ""
-    printf "${YELLOW}📖 Lưu ý:${NC}\n"
-    echo "  • Sửa file config.yml để thêm/bớt ứng dụng"
-    echo "  • Sau khi sửa config, chạy: docker restart homer"
-    echo "  • Tham khảo: https://github.com/bastienwirtz/homer"
+    echo "  Glances:"
+    echo "    - Xem logs:        docker logs -f glances"
+    echo "    - Dung Glances:    docker stop glances"
+    echo "    - Khoi dong lai:   docker restart glances"
     echo ""
-    printf "${BLUE}💡 Mẹo: Homer cực kỳ nhẹ, chỉ tốn ~30MB RAM!${NC}\n"
+    echo "  Chinh sua config:    nano ~/homer/homer-config/config.yml"
+    echo ""
+    printf "${YELLOW}Luu y:${NC}\n"
+    echo "  - Homer: Dashboard chinh de quan ly ung dung"
+    echo "  - Glances: Xem CPU, RAM, GPU, Disk real-time"
+    echo "  - Sau khi sua config, chay: docker restart homer"
+    echo "  - Tham khao Homer: https://github.com/bastienwirtz/homer"
+    echo "  - Tham khao Glances: https://nicolargo.github.io/glances/"
+    echo ""
+    printf "${BLUE}Meo: Homer + Glances chi ton ~256MB RAM!${NC}\n"
     echo ""
 else
-    printf "${RED}❌ Có lỗi xảy ra khi khởi chạy Homer${NC}\n"
+    printf "${RED}Co loi xay ra khi khoi chay Homer${NC}\n"
     exit 1
 fi

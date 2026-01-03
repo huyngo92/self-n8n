@@ -54,8 +54,22 @@ docker rm -f cloudflare-tunnel > /dev/null 2>&1
 # Tạo network nếu chưa có
 docker network create n8n-network > /dev/null 2>&1 || true
 
+# Tạo file config cho tunnel
+cat > cloudflared-config.yml <<'EOF'
+tunnel: auto
+credentials-file: /etc/cloudflared/creds.json
+
+ingress:
+  - hostname: hotromyss.site
+    service: http://host.docker.internal:80
+  - hostname: "*.hotromyss.site"
+    service: http://host.docker.internal:80
+  - service: http_status:404
+EOF
+
 sudo docker run -d --name cloudflare-tunnel \
   --network n8n-network \
+  --add-host=host.docker.internal:host-gateway \
   --restart unless-stopped \
   cloudflare/cloudflared:latest tunnel --no-autoupdate run \
   --token eyJhIjoiODg3MjFhNGQ4Y2E0ZjYyZmIyNGNkOWE3NTA3MWJhMTIiLCJ0IjoiZDRjYmNiMDUtYzI0Yi00OWZhLTk1YzItZjJjMzQ0NmIzMGJlIiwicyI6IllXVXpOV1E0TXpNdE16UXlPQzAwWVdNM0xUZzRNbVV0TmpnMk5XSXlNVFEzWTJFMyJ9

@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  homer:
+    image: b4bz/homer:latest
+    container_name: homer
+    ports:
+      - 8081:8080
+    volumes:
+      - ./homer-config:/www/assets
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128M # Chỉ cần 128MB RAM
+        reservations:
+          memory: 32M  # Tối thiểu 32MB

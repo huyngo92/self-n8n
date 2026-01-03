@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Script tự động cài đặt n8n với Docker Compose (tối ưu cho PC)
 # Yêu cầu: Docker và Docker Compose đã được cài đặt
@@ -15,27 +15,27 @@ RED='\033[0;31m'
 NC='\033[0m' # No Color
 
 # Kiểm tra Docker đã được cài đặt chưa
-echo -e "${YELLOW}[1/4]${NC} Kiểm tra Docker..."
-if ! command -v docker &> /dev/null; then
-    echo -e "${RED}❌ Docker chưa được cài đặt. Vui lòng cài Docker trước.${NC}"
+printf "${YELLOW}[1/4]${NC} Kiểm tra Docker...\n"
+if ! which docker > /dev/null 2>&1 && ! [ -x /usr/bin/docker ]; then
+    printf "${RED}❌ Docker chưa được cài đặt. Vui lòng cài Docker trước.${NC}\n"
     exit 1
 fi
-echo -e "${GREEN}✓ Docker đã được cài đặt${NC}"
+printf "${GREEN}✓ Docker đã được cài đặt${NC}\n"
 
 # Kiểm tra Docker Compose
-echo -e "${YELLOW}[2/4]${NC} Kiểm tra Docker Compose..."
-if ! command -v docker-compose &> /dev/null && ! docker compose version &> /dev/null; then
-    echo -e "${RED}❌ Docker Compose chưa được cài đặt.${NC}"
+printf "${YELLOW}[2/4]${NC} Kiểm tra Docker Compose...\n"
+if ! docker compose version > /dev/null 2>&1 && ! which docker-compose > /dev/null 2>&1; then
+    printf "${RED}❌ Docker Compose chưa được cài đặt.${NC}\n"
     exit 1
 fi
-echo -e "${GREEN}✓ Docker Compose đã được cài đặt${NC}"
+printf "${GREEN}✓ Docker Compose đã được cài đặt${NC}\n"
 
 # Tạo thư mục n8n và volumes
-echo -e "${YELLOW}[3/6]${NC} Tạo thư mục n8n..."
+printf "${YELLOW}[3/6]${NC} Tạo thư mục n8n...\n"
 N8N_DIR="$HOME/n8n"
 mkdir -p "$N8N_DIR"
 cd "$N8N_DIR" || exit 1
-echo -e "${GREEN}✓ Thư mục đã sẵn sàng: $N8N_DIR${NC}"
+printf "${GREEN}✓ Thư mục đã sẵn sàng: $N8N_DIR${NC}\n"
 
 echo ""
 echo "--------- 🟢 Start creating folder -----------"
@@ -45,7 +45,7 @@ sudo chmod -R 755 vol_n8n
 echo "--------- 🔴 Finish creating folder -----------"
 
 echo ""
-echo -e "${YELLOW}[4/6]${NC} Khởi chạy Cloudflare Tunnel..."
+printf "${YELLOW}[4/6]${NC} Khởi chạy Cloudflare Tunnel...\n"
 echo "--------- 🟢 Start Cloudflare Tunnel -----------"
 sudo docker run -d --name cloudflare-tunnel \
   --restart unless-stopped \
@@ -55,19 +55,19 @@ echo "--------- 🔴 Finish Cloudflare Tunnel -----------"
 
 echo ""
 # Tải file docker-compose.yml từ GitHub
-echo -e "${YELLOW}[5/6]${NC} Tải file compose.yaml từ GitHub..."
+printf "${YELLOW}[5/6]${NC} Tải file compose.yaml từ GitHub...\n"
 wget https://raw.githubusercontent.com/huyngo92/self-n8n/refs/heads/main/n8n/compose-docker_n8n.yaml -O docker-compose.yml
 
 if [ $? -ne 0 ]; then
-    echo -e "${RED}❌ Không thể tải file compose.yaml${NC}"
+    printf "${RED}❌ Không thể tải file compose.yaml${NC}\n"
     exit 1
 fi
 
-echo -e "${GREEN}✓ File compose.yaml đã được tải xuống (đã bao gồm giới hạn tài nguyên)${NC}"
+printf "${GREEN}✓ File compose.yaml đã được tải xuống (đã bao gồm giới hạn tài nguyên)${NC}\n"
 
 # Khởi chạy n8n
 echo ""
-echo -e "${YELLOW}[6/6]${NC} Khởi chạy n8n..."
+printf "${YELLOW}[6/6]${NC} Khởi chạy n8n...\n"
 echo "--------- 🟢 Start docker compose up -----------"
 
 # Export biến môi trường
@@ -75,7 +75,7 @@ export EXTERNAL_IP=https://hotromyss.site
 export CURR_DIR=$(pwd)
 
 # Chạy docker compose
-if docker compose version &> /dev/null; then
+if docker compose version > /dev/null 2>&1; then
     sudo -E docker compose up -d
 else
     sudo -E docker-compose up -d
@@ -84,21 +84,21 @@ fi
 if [ $? -eq 0 ]; then
     echo "--------- 🔴 Finish! Wait a few minutes and test in browser at url $EXTERNAL_IP for n8n UI -----------"
     echo ""
-    echo -e "${GREEN}=========================================="
+    printf "${GREEN}==========================================\n"
     echo "   ✓ CÀI ĐẶT THÀNH CÔNG!"
-    echo -e "==========================================${NC}"
+    printf "==========================================${NC}\n"
     echo ""
-    echo -e "${GREEN}📍 n8n đang chạy tại:${NC} $EXTERNAL_IP"
-    echo -e "${GREEN}📁 Thư mục cài đặt:${NC} $N8N_DIR"
-    echo -e "${GREEN}💾 Dữ liệu được lưu tại:${NC} $N8N_DIR/vol_n8n"
+    printf "${GREEN}📍 n8n đang chạy tại:${NC} $EXTERNAL_IP\n"
+    printf "${GREEN}📁 Thư mục cài đặt:${NC} $N8N_DIR\n"
+    printf "${GREEN}💾 Dữ liệu được lưu tại:${NC} $N8N_DIR/vol_n8n\n"
     echo ""
-    echo -e "${YELLOW}⚙️  Cấu hình tài nguyên:${NC}"
+    printf "${YELLOW}⚙️  Cấu hình tài nguyên:${NC}\n"
     echo "  • RAM tối đa: 2GB"
     echo "  • RAM tối thiểu: 512MB"
     echo "  • CPU tối đa: 2 cores"
     echo "  • CPU tối thiểu: 0.5 core"
     echo ""
-    echo -e "${YELLOW}🔧 Các lệnh hữu ích:${NC}"
+    printf "${YELLOW}🔧 Các lệnh hữu ích:${NC}\n"
     echo "  • Xem logs:          docker logs -f cont_n8n"
     echo "  • Dừng n8n:          docker stop cont_n8n"
     echo "  • Khởi động lại:     docker restart cont_n8n"
@@ -107,12 +107,12 @@ if [ $? -eq 0 ]; then
     echo "  • Xem Cloudflare:    docker logs cloudflare-tunnel"
     echo "  • Dừng Cloudflare:   docker stop cloudflare-tunnel"
     echo ""
-    echo -e "${YELLOW}📖 Lưu ý:${NC}"
+    printf "${YELLOW}📖 Lưu ý:${NC}\n"
     echo "  • Đăng nhập lần đầu sẽ yêu cầu tạo tài khoản admin"
     echo "  • Dữ liệu workflow được lưu trong thư mục vol_n8n"
     echo "  • Tham khảo: https://docs.n8n.io"
     echo ""
 else
-    echo -e "${RED}❌ Có lỗi xảy ra khi khởi chạy n8n${NC}"
+    printf "${RED}❌ Có lỗi xảy ra khi khởi chạy n8n${NC}\n"
     exit 1
 fi

@@ -47,10 +47,21 @@ echo "--------- 🔴 Finish creating folder -----------"
 echo ""
 printf "${YELLOW}[4/6]${NC} Khởi chạy Cloudflare Tunnel...\n"
 echo "--------- 🟢 Start Cloudflare Tunnel -----------"
+
+# Xóa container cũ nếu tồn tại
+docker rm -f cloudflare-tunnel > /dev/null 2>&1
+
+# Tạo network nếu chưa có
+docker network create n8n-network > /dev/null 2>&1 || true
+
 sudo docker run -d --name cloudflare-tunnel \
+  --network n8n-network \
   --restart unless-stopped \
   cloudflare/cloudflared:latest tunnel --no-autoupdate run \
   --token eyJhIjoiODg3MjFhNGQ4Y2E0ZjYyZmIyNGNkOWE3NTA3MWJhMTIiLCJ0IjoiZDRjYmNiMDUtYzI0Yi00OWZhLTk1YzItZjJjMzQ0NmIzMGJlIiwicyI6IllXVXpOV1E0TXpNdE16UXlPQzAwWVdNM0xUZzRNbVV0TmpnMk5XSXlNVFEzWTJFMyJ9
+
+printf "${YELLOW}⏳ Đợi Cloudflare Tunnel kết nối (5 giây)...${NC}\n"
+sleep 5
 echo "--------- 🔴 Finish Cloudflare Tunnel -----------"
 
 echo ""
@@ -71,7 +82,7 @@ printf "${YELLOW}[6/6]${NC} Khởi chạy n8n...\n"
 echo "--------- 🟢 Start docker compose up -----------"
 
 # Export biến môi trường
-export EXTERNAL_IP=https://hotromyss.site
+export EXTERNAL_IP=https://flow.hotromyss.site
 export CURR_DIR=$(pwd)
 
 # Chạy docker compose

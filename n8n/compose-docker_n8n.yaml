@@ -2,6 +2,8 @@ services:
   svr_n8n:
     image: n8nio/n8n:latest
     container_name: cont_n8n
+    networks:
+      - n8n-network
     environment:
       - N8N_SECURE_COOKIE=false
       - GENERIC_TIMEZONE=Asia/Ho_Chi_Minh
@@ -25,3 +27,7 @@ services:
         reservations:
           memory: 512M    # Tối thiểu 512MB RAM
           cpus: '0.5'     # Tối thiểu 0.5 CPU
+
+networks:
+  n8n-network:
+    external: true

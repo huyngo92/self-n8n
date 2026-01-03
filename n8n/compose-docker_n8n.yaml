@@ -1,0 +1,27 @@
+services:
+  svr_n8n:
+    image: n8nio/n8n:latest
+    container_name: cont_n8n
+    environment:
+      - N8N_SECURE_COOKIE=false
+      - GENERIC_TIMEZONE=Asia/Ho_Chi_Minh
+      - N8N_EDITOR_BASE_URL=${EXTERNAL_IP}
+      - WEBHOOK_URL=${EXTERNAL_IP}
+      - N8N_DEFAULT_BINARY_DATA_MODE=filesystem
+      - N8N_MCP_ENABLED=true
+      - N8N_MCP_MODE=server
+      - N8N_HOST=${EXTERNAL_IP}
+      - WEBHOOK_URL=${EXTERNAL_IP}
+    ports:
+      - "80:5678"
+    volumes:
+      - ${CURR_DIR}/vol_n8n:/home/node/.n8n
+    restart: always # Tự động khởi động lại container nếu bị dừng 
+    deploy:
+      resources:
+        limits:
+          memory: 2G      # Tối đa 2GB RAM
+          cpus: '2.0'     # Tối đa 2 CPU cores
+        reservations:
+          memory: 512M    # Tối thiểu 512MB RAM
+          cpus: '0.5'     # Tối thiểu 0.5 CPU
